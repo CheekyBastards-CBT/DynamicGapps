@@ -26,8 +26,6 @@ if (echo "$arch" | grep -qi "armeabi"); then
   cp -rf $tmp_path/prebuiltgmscore/arm/* /system
 elif (echo "$arch" | grep -qi "arm64"); then
   cp -rf $tmp_path/prebuiltgmscore/arm64/* /system
-elif (echo "$arch" | grep -qi "x86"); then
-  cp -rf $tmp_path/prebuiltgmscore/x86/* /system
 fi
 
 # Cleanup

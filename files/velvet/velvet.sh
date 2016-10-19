@@ -26,8 +26,6 @@ if (echo "$arch" | grep -qi "armeabi"); then
   cp -rf $tmp_path/velvet/arm/* /system
 elif (echo "$arch" | grep -qi "arm64"); then
   cp -rf $tmp_path/velvet/arm64/* /system
-elif (echo "$arch" | grep -qi "x86"); then
-  cp -rf $tmp_path/velvet/x86/* /system
 fi
 
 # Cleanup

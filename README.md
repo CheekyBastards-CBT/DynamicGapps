@@ -1,12 +1,12 @@
-#BaNkS Dynamic GApps#
-#by BaNkS#
+#Dynamic GApps#
+**Originally By Banks**
 
 **ABOUT:**
 
-* Dynamic and minimal GApps for arm, arm64, and x86
+* Dynamic GApps for arm & arm64 (Minimal)
 * Includes core Google syncing apks
-* Includes Google App, GoogleTTS, Facelock (arm and arm64 only)
-* Legacy support for swyping on AOSP LatinIME Keyboard (arm and arm64 only)
+* Includes Google App, GoogleTTS, Facelock
+* Legacy support for swyping on AOSP LatinIME Keyboard
 * Nothing more and nothing less
 
 **HOW TO USE:**
@@ -23,6 +23,7 @@
 
 **CREDITS:**
 
+* Banks
 * Google
 * CyanogenMod
 * TKruzze

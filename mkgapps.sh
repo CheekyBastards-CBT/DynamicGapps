@@ -12,13 +12,6 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-echo "._______.._______..__...._..___..._.._______................"
-echo "|.._....||..._...||..\..|.||...|.|.||.......|..............."
-echo "|.|_|...||..| |..||...\_|.||...|_|.||.._____|..............."
-echo "|.......||..|_|..||.......||......_||.|_____................"
-echo "|.._...|.|.......||.._....||.....|_.|_____..|..............."
-echo "|.|_|...||..._...||.|.\...||...._..|._____|.|..............."
-echo "|_______||__|.|__||_|..\__||___|.|_||_______|..............."
 echo ".______...__...__..__...._.._______..__...__..___..._______."
 echo "|......\.|..|.|..||..\..|.||..._...||..\_/..||...|.|...____|"
 echo "|..__...||..|_|..||...\_|.||..| |..||.......||...|.|..|....."
@@ -36,15 +29,13 @@ echo "|_______||__|.|__||___|....|___|....|_______|..............."
 
 # Define paths & variables
 APPDIRS="facelock/arm/app/FaceLock
-         googletts/arm/app/GoogleTTS
-         googletts/x86/app/GoogleTTS
          googlevrcore/arm/app/GoogleVrCore
          googlevrcore/arm64/app/GoogleVrCore
          prebuiltgmscore/arm/priv-app/PrebuiltGmsCore
          prebuiltgmscore/arm64/priv-app/PrebuiltGmsCore
-         prebuiltgmscore/x86/priv-app/PrebuiltGmsCore
          system/app/GoogleCalendarSyncAdapter
          system/app/GoogleContactsSyncAdapter
+         system/app/GoogleTTS
          system/priv-app/ConfigUpdater
          system/priv-app/GoogleBackupTransport
          system/priv-app/GoogleFeedback
@@ -56,14 +47,13 @@ APPDIRS="facelock/arm/app/FaceLock
          system/priv-app/Phonesky
          system/priv-app/SetupWizard
          velvet/arm/priv-app/Velvet
-         velvet/arm64/priv-app/Velvet
-         velvet/x86/priv-app/Velvet"
+         velvet/arm64/priv-app/Velvet"
 TARGETDIR=$(pwd)
 GAPPSDIR="$TARGETDIR"/files
 TOOLSDIR="$TARGETDIR"/tools
 STAGINGDIR="$TARGETDIR"/staging
 FINALDIR="$TARGETDIR"/out
-ZIPTITLE=banks_dynamic_gapps
+ZIPTITLE=Dynamic_GApps
 ZIPVERSION=7.x.x
 ZIPDATE=$(date +"%Y%m%d")
 ZIPNAME="$ZIPTITLE"-"$ZIPVERSION"-"$ZIPDATE".zip

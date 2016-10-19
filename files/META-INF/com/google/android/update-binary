@@ -24,9 +24,9 @@ ui_print() {
 
 gapps_ver=7.x.x
 
-ui_print "*********************************************"
-ui_print "BaNkS Dynamic GApps for Android version $gapps_ver"
-ui_print "*********************************************"
+ui_print "**************************************"
+ui_print "** Dynamic GApps for Android $gapps_ver **"
+ui_print "**************************************"
 
 is_mounted() {
   if [ ! -z "$2" ]; then
@@ -121,9 +121,6 @@ unzip -o "$zipfile" "system/*" -d /
 unzip -o "$zipfile" "facelock/*" -d /tmp
 set_perm 0 0 0777 /tmp/facelock/facelock.sh
 /tmp/facelock/facelock.sh
-unzip -o "$zipfile" "googletts/*" -d /tmp
-set_perm 0 0 0777 /tmp/googletts/googletts.sh
-/tmp/googletts/googletts.sh
 unzip -o "$zipfile" "googlevrcore/*" -d /tmp
 set_perm 0 0 0777 /tmp/googlevrcore/googlevrcore.sh
 /tmp/googlevrcore/googlevrcore.sh
