@@ -28,15 +28,16 @@ fi
 
 # Libs
 if (echo "$arch" | grep -qi "armeabi"); then
-  cp -rf $tmp_path/facelock/lib/* /system/lib
+  cp -rf $tmp_path/facelock/armlibs/lib/* /system/lib
   mkdir -p /system/vendor/lib
-  cp -rf $tmp_path/facelock/vendor/lib/* /system/vendor/lib
+  cp -rf $tmp_path/facelock/armlibs/vendor/lib/* /system/vendor/lib
 elif (echo "$arch" | grep -qi "arm64"); then
-  cp -rf $tmp_path/facelock/lib64/* /system/lib64
+  cp -rf $tmp_path/facelock/arm64libs/lib/* /system/lib
+  cp -rf $tmp_path/facelock/arm64libs/lib64/* /system/lib64
   mkdir -p /system/vendor/lib
   mkdir -p /system/vendor/lib64
-  cp -rf $tmp_path/facelock/vendor/lib/* /system/vendor/lib
-  cp -rf $tmp_path/facelock/vendor/lib64/* /system/vendor/lib64
+  cp -rf $tmp_path/facelock/arm64libs/vendor/lib/* /system/vendor/lib
+  cp -rf $tmp_path/facelock/arm64libs/vendor/lib64/* /system/vendor/lib64
 fi
 
 # Make required symbolic links

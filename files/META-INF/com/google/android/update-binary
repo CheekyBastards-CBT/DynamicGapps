@@ -133,6 +133,9 @@ set_perm 0 0 0777 /tmp/prebuiltgmscore/prebuiltgmscore.sh
 unzip -o "$zipfile" "velvet/*" -d /tmp
 set_perm 0 0 0777 /tmp/velvet/velvet.sh
 /tmp/velvet/velvet.sh
+unzip -o "$zipfile" "setupwizard/*" -d /tmp
+set_perm 0 0 0777 /tmp/setupwizard/setupwizard.sh
+/tmp/setupwizard/setupwizard.sh
 
 set_perm_recursive() {
   uid=$1; gid=$2; dmod=$3; fmod=$4;

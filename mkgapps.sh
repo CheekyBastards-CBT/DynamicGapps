@@ -33,6 +33,8 @@ APPDIRS="facelock/arm/app/FaceLock
          googlevrcore/arm64/app/GoogleVrCore
          prebuiltgmscore/arm/priv-app/PrebuiltGmsCore
          prebuiltgmscore/arm64/priv-app/PrebuiltGmsCore
+         setupwizard/phone/priv-app/SetupWizard
+         setupwizard/tablet/priv-app/SetupWizard
          system/app/GoogleCalendarSyncAdapter
          system/app/GoogleContactsSyncAdapter
          system/app/GoogleTTS
@@ -45,7 +47,6 @@ APPDIRS="facelock/arm/app/FaceLock
          system/priv-app/GoogleServicesFramework
          system/priv-app/HotwordEnrollment
          system/priv-app/Phonesky
-         system/priv-app/SetupWizard
          velvet/arm/priv-app/Velvet
          velvet/arm64/priv-app/Velvet"
 TARGETDIR=$(pwd)
