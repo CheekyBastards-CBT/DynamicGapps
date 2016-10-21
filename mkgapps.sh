@@ -1,34 +1,34 @@
 #!/usr/bin/env bash
 
-# This file contains parts from the scripts taken from the Open GApps Project by mfonville.
+# Copyright (C) 2016 BeansTown106
+# Portions Copyright (C) 2016 MrBaNkS
 #
-# The Open GApps scripts are free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# These scripts are distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-
-echo ".______...__...__..__...._.._______..__...__..___..._______."
-echo "|......\.|..|.|..||..\..|.||..._...||..\_/..||...|.|...____|"
-echo "|..__...||..|_|..||...\_|.||..| |..||.......||...|.|..|....."
-echo "|.|. \..||.......||.......||..|_|..||.......||...|.|..|....."
-echo "|.|__/..||_....._||.._....||.......||.......||...|.|..|....."
-echo "|.......|..|...|..|.|.\...||..._...||.||_||.||...|.|..|____."
-echo "|______/...|___|..|_|..\__||__|.|__||_|...|_||___|.|_______|"
-echo "._______.._______.._______.._______.._______................"
-echo "|.......||..._...||...._..||...._..||.......|..............."
-echo "|....___||..| |..||...| |.||...| |.||.._____|..............."
-echo "|...|.__.|..|_|..||...|_|.||...|_|.||.|_____................"
-echo "|...||..||.......||....___||....___||_____..|..............."
-echo "|...|_|.||..._...||...|....|...|....._____|.|..............."
-echo "|_______||__|.|__||___|....|___|....|_______|..............."
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 # Define paths & variables
-APPDIRS="facelock/arm/app/FaceLock
+TARGETDIR=$(pwd)
+BASE="$TARGETDIR"/base
+MINI="$TARGETDIR"/mini
+TOOLSDIR="$TARGETDIR"/tools
+STAGINGDIR="$TARGETDIR"/staging
+FINALDIR="$TARGETDIR"/out
+ZIPNAMEMIN=Mini_Dynamic_GApps-7.x.x-$(date +"%Y%m%d").zip
+JAVAHEAP=3072m
+SIGNAPK="$TOOLSDIR"/signapk.jar
+MINSIGNAPK="$TOOLSDIR"/minsignapk.jar
+TESTKEYPEM="$TOOLSDIR"/testkey.x509.pem 
+TESTKEYPK8="$TOOLSDIR"/testkey.pk8
+MINIAPPS="facelock/arm/app/FaceLock
          googlevrcore/arm/app/GoogleVrCore
          googlevrcore/arm64/app/GoogleVrCore
          prebuiltgmscore/arm/priv-app/PrebuiltGmsCore
@@ -49,20 +49,12 @@ APPDIRS="facelock/arm/app/FaceLock
          system/priv-app/Phonesky
          velvet/arm/priv-app/Velvet
          velvet/arm64/priv-app/Velvet"
-TARGETDIR=$(pwd)
-GAPPSDIR="$TARGETDIR"/files
-TOOLSDIR="$TARGETDIR"/tools
-STAGINGDIR="$TARGETDIR"/staging
-FINALDIR="$TARGETDIR"/out
-ZIPTITLE=Dynamic_GApps
-ZIPVERSION=7.x.x
-ZIPDATE=$(date +"%Y%m%d")
-ZIPNAME="$ZIPTITLE"-"$ZIPVERSION"-"$ZIPDATE".zip
-JAVAHEAP=3072m
-SIGNAPK="$TOOLSDIR"/signapk.jar
-MINSIGNAPK="$TOOLSDIR"/minsignapk.jar
-TESTKEYPEM="$TOOLSDIR"/testkey.x509.pem 
-TESTKEYPK8="$TOOLSDIR"/testkey.pk8
+
+# Colors
+green=`tput setaf 2`
+red=`tput setaf 1`
+yellow=`tput setaf 3`
+reset=`tput sgr0`
 
 # Decompression function for apks
 dcapk() {
@@ -78,35 +70,66 @@ dcapk() {
   rm -f "$TARGETAPK".orig
 }
 
-# Define beginning time
-BEGIN=$(date +"%s")
+# Menu Options
+menu=
+until [ "$menu" = "0" ]; do
+echo "${red}==============================================${reset}"
+echo "${red}==${reset}${green}               Dynamic GApps              ${reset}${red}==${reset}"
+echo "${red}==${reset}${green}          Google Apps for arm/arm64       ${reset}${red}==${reset}"
+echo "${red}==============================================${reset}"
+echo "${red}==${reset}${yellow}   1 - Mini GApps                         ${reset}${red}==${reset}"
+echo "${red}==${reset}${yellow}   2 - Full GApps                         ${reset}${red}==${reset}"
+echo "${red}==${reset}${yellow}   0 - Exit                               ${reset}${red}==${reset}"
+echo "${red}==============================================${reset}"
+echo ""
+echo -n "Enter selection: "
+read menu
+echo ""
+case ${menu} in
 
-# Start making GApps zip
+# Mini GApps
+1 )
+# Start Mini
+BEGIN=$(date +%s)
 export PATH="$TOOLSDIR":$PATH
-cp -rf "$GAPPSDIR"/* "$STAGINGDIR"
+cp -rf "$BASE"/* "$STAGINGDIR"
+cp -rf "$MINI"/* "$STAGINGDIR"
 
-for dirs in $APPDIRS; do
+for dirs in $MINIAPPS; do
   cd "$STAGINGDIR/${dirs}";
   dcapk 1> /dev/null 2>&1;
 done
 
 cd "$STAGINGDIR"
-zip -qr9 "$ZIPNAME" ./* -x "placeholder"
-java -Xmx"$JAVAHEAP" -jar "$SIGNAPK" -w "$TESTKEYPEM" "$TESTKEYPK8" "$ZIPNAME" "$ZIPNAME".signed
-rm -f "$ZIPNAME"
-zipadjust "$ZIPNAME".signed "$ZIPNAME".fixed 1> /dev/null 2>&1
-rm -f "$ZIPNAME".signed
-java -Xmx"$JAVAHEAP" -jar "$MINSIGNAPK" "$TESTKEYPEM" "$TESTKEYPK8" "$ZIPNAME".fixed "$ZIPNAME"
-rm -f "$ZIPNAME".fixed
-mv -f "$ZIPNAME" "$FINALDIR"
+zip -qr9 "$ZIPNAMEMIN" ./* -x "placeholder"
+java -Xmx"$JAVAHEAP" -jar "$SIGNAPK" -w "$TESTKEYPEM" "$TESTKEYPK8" "$ZIPNAMEMIN" "$ZIPNAMEMIN".signed
+rm -f "$ZIPNAMEMIN"
+zipadjust "$ZIPNAMEMIN".signed "$ZIPNAMEMIN".fixed 1> /dev/null 2>&1
+rm -f "$ZIPNAMEMIN".signed
+java -Xmx"$JAVAHEAP" -jar "$MINSIGNAPK" "$TESTKEYPEM" "$TESTKEYPK8" "$ZIPNAMEMIN".fixed "$ZIPNAMEMIN"
+rm -f "$ZIPNAMEMIN".fixed
+mv -f "$ZIPNAMEMIN" "$FINALDIR"
 ls | grep -iv "placeholder" | xargs rm -rf
-
-# Define ending time
-END=$(date +"%s")
-
-# Done
-clear
-echo "All done creating GApps!"
-echo "Total time elapsed: $(echo $(($END-$BEGIN)) | awk '{print int($1/60)"mins "int($1%60)"secs "}') ($(echo "$END - $BEGIN" | bc) seconds)"
-echo "Completed GApps zip is located in $FINALDIR"
 cd ../
+
+# Finish Mini
+END=$(date +%s)
+echo "${green}Mini Gapps Complete!!${reset}"
+echo "${green}Total time elapsed: $(echo $((${END}-${BEGIN})) | awk '{print int($1/60)"mins "int($1%60)"secs "}')${reset}"
+echo "${green}Completed GApps Zip will be in $FINALDIR ${reset}"
+;;
+#############################################################
+
+# Full GApps
+2 )
+echo "${green}Coming Soon!!${reset}"
+;;
+#############################################################
+
+# Exit/Wrong choice
+0 ) exit ;;
+* ) echo "Wrong Choice, 1, 2 or 0 to exit"
+    esac
+done
+;;
+#############################################################

@@ -2,27 +2,27 @@
 **Originally By Banks**
 
 **ABOUT:**
+* Dynamic GApps for arm & arm64 (Mini & Full)
 
-* Dynamic GApps for arm & arm64 (Minimal)
+**MINI:**
 * Includes core Google syncing apks
 * Includes Google App, GoogleTTS, Facelock
 * Legacy support for swyping on AOSP LatinIME Keyboard
-* Nothing more and nothing less
+
+**FULL:**
+* Coming Soon!!
 
 **HOW TO USE:**
-
 * Get into the base of this repo
 * . mkgapps.sh
-* Script will decompress all apks, zipalign all apks, zip, and sign the completed GApps package
+* Choose your Selection
 * Completed GApps zip will be in the out directory
 
 **PREREQUISITES:**
-
 * A full Linux system with an Android build system setup
 * OpenJDK 8
 
 **CREDITS:**
-
 * Banks
 * Google
 * CyanogenMod
