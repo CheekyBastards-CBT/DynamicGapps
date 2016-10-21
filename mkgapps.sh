@@ -15,6 +15,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Usage:
+# $ (source|bash|.) mkgapps.sh
+# $ (source|bash|.) mkgapps.sh <mini|full|both>
+# If you omit the parameters, an interactive menu will prompt you for them
+# If you want to automate this script in your work flow, provide the parameters
+
 # Define paths & variables
 TARGETDIR=$(pwd)
 BASE="$TARGETDIR"/base
@@ -26,7 +32,7 @@ ZIPNAMEMIN=Mini_Dynamic_GApps-7.x.x-$(date +"%Y%m%d").zip
 JAVAHEAP=3072m
 SIGNAPK="$TOOLSDIR"/signapk.jar
 MINSIGNAPK="$TOOLSDIR"/minsignapk.jar
-TESTKEYPEM="$TOOLSDIR"/testkey.x509.pem 
+TESTKEYPEM="$TOOLSDIR"/testkey.x509.pem
 TESTKEYPK8="$TOOLSDIR"/testkey.pk8
 MINIAPPS="facelock/arm/app/FaceLock
          googlevrcore/arm/app/GoogleVrCore
@@ -70,66 +76,94 @@ dcapk() {
   rm -f "$TARGETAPK".orig
 }
 
-# Menu Options
-menu=
-until [ "$menu" = "0" ]; do
-echo "${red}==============================================${reset}"
-echo "${red}==${reset}${green}               Dynamic GApps              ${reset}${red}==${reset}"
-echo "${red}==${reset}${green}          Google Apps for arm/arm64       ${reset}${red}==${reset}"
-echo "${red}==============================================${reset}"
-echo "${red}==${reset}${yellow}   1 - Mini GApps                         ${reset}${red}==${reset}"
-echo "${red}==${reset}${yellow}   2 - Full GApps                         ${reset}${red}==${reset}"
-echo "${red}==${reset}${yellow}   0 - Exit                               ${reset}${red}==${reset}"
-echo "${red}==============================================${reset}"
-echo ""
-echo -n "Enter selection: "
-read menu
-echo ""
-case ${menu} in
+# Flags
+MAKE_MINI=false
+MAKE_FULL=false
 
-# Mini GApps
-1 )
-# Start Mini
-BEGIN=$(date +%s)
-export PATH="$TOOLSDIR":$PATH
-cp -rf "$BASE"/* "$STAGINGDIR"
-cp -rf "$MINI"/* "$STAGINGDIR"
+# Parameter/menu logic
+# If the user wants to specific the GApps they want as parameters, they can
+# Otherwise, they will be provided a menu to make their selection
+if [[ -z ${1} ]]; then
+   echo "${red}==============================================${reset}"
+   echo "${red}==${reset}${green}               Dynamic GApps              ${reset}${red}==${reset}"
+   echo "${red}==${reset}${green}          Google Apps for arm/arm64       ${reset}${red}==${reset}"
+   echo "${red}==============================================${reset}"
+   echo "${red}==${reset}${yellow}   1 - Mini GApps                         ${reset}${red}==${reset}"
+   echo "${red}==${reset}${yellow}   2 - Full GApps                         ${reset}${red}==${reset}"
+   echo "${red}==${reset}${yellow}   3 - Both GApps                         ${reset}${red}==${reset}"
+   echo "${red}==${reset}${yellow}   0 - Exit                               ${reset}${red}==${reset}"
+   echo "${red}==============================================${reset}"
+   echo ""
+   echo -n "Enter selection: "
+   read menu
 
-for dirs in $MINIAPPS; do
-  cd "$STAGINGDIR/${dirs}";
-  dcapk 1> /dev/null 2>&1;
-done
+   case "${menu}" in
+      "1")
+         MAKE_MINI=true ;;
+      "2")
+         MAKE_FULL=true ;;
+      "3")
+         MAKE_FULL=true
+         MAKE_MINI=true ;;
+      "0")
+         exit ;;
+      *)
+         echo "Invalid selection! Please run the script again." && exit ;;
+   esac
+else
+   while [[ $# -ge 1 ]]; do
+      case "${1}" in
+         "full")
+            MAKE_FULL=true ;;
+         "mini")
+            MAKE_MINI=true ;;
+         "both")
+            MAKE_FULL=true
+            MAKE_MINI=true ;;
+         *)
+            echo "Invalid parameter! Please run the script again and either specify mini, full, or both." && exit ;;
+      esac
 
-cd "$STAGINGDIR"
-zip -qr9 "$ZIPNAMEMIN" ./* -x "placeholder"
-java -Xmx"$JAVAHEAP" -jar "$SIGNAPK" -w "$TESTKEYPEM" "$TESTKEYPK8" "$ZIPNAMEMIN" "$ZIPNAMEMIN".signed
-rm -f "$ZIPNAMEMIN"
-zipadjust "$ZIPNAMEMIN".signed "$ZIPNAMEMIN".fixed 1> /dev/null 2>&1
-rm -f "$ZIPNAMEMIN".signed
-java -Xmx"$JAVAHEAP" -jar "$MINSIGNAPK" "$TESTKEYPEM" "$TESTKEYPK8" "$ZIPNAMEMIN".fixed "$ZIPNAMEMIN"
-rm -f "$ZIPNAMEMIN".fixed
-mv -f "$ZIPNAMEMIN" "$FINALDIR"
-ls | grep -iv "placeholder" | xargs rm -rf
-cd ../
+      shift
+   done
+fi
 
-# Finish Mini
-END=$(date +%s)
-echo "${green}Mini Gapps Complete!!${reset}"
-echo "${green}Total time elapsed: $(echo $((${END}-${BEGIN})) | awk '{print int($1/60)"mins "int($1%60)"secs "}')${reset}"
-echo "${green}Completed GApps Zip will be in $FINALDIR ${reset}"
-;;
-#############################################################
 
-# Full GApps
-2 )
-echo "${green}Coming Soon!!${reset}"
-;;
-#############################################################
+if [[ "${MAKE_MINI}" = true ]]; then
+   # Start Mini
+   echo ""; echo "Making Mini Dynamic GApps!"; echo ""
 
-# Exit/Wrong choice
-0 ) exit ;;
-* ) echo "Wrong Choice, 1, 2 or 0 to exit"
-    esac
-done
-;;
-#############################################################
+   BEGIN=$(date +%s)
+   export PATH="$TOOLSDIR":$PATH
+   cp -rf "$BASE"/* "$STAGINGDIR"
+   cp -rf "$MINI"/* "$STAGINGDIR"
+
+   for dirs in $MINIAPPS; do
+     cd "$STAGINGDIR/${dirs}";
+     dcapk 1> /dev/null 2>&1;
+   done
+
+   cd "$STAGINGDIR"
+   zip -qr9 "$ZIPNAMEMIN" ./* -x "placeholder"
+   java -Xmx"$JAVAHEAP" -jar "$SIGNAPK" -w "$TESTKEYPEM" "$TESTKEYPK8" "$ZIPNAMEMIN" "$ZIPNAMEMIN".signed
+   rm -f "$ZIPNAMEMIN"
+   zipadjust "$ZIPNAMEMIN".signed "$ZIPNAMEMIN".fixed 1> /dev/null 2>&1
+   rm -f "$ZIPNAMEMIN".signed
+   java -Xmx"$JAVAHEAP" -jar "$MINSIGNAPK" "$TESTKEYPEM" "$TESTKEYPK8" "$ZIPNAMEMIN".fixed "$ZIPNAMEMIN"
+   rm -f "$ZIPNAMEMIN".fixed
+   rm -f "$FINALDIR"/*.zip
+   mv -f "$ZIPNAMEMIN" "$FINALDIR"
+   ls | grep -iv "placeholder" | xargs rm -rf
+   cd ../
+
+   if [[ -f ${FINALDIR}/${ZIPNAMEMIN} ]]; then
+      # Finish Mini
+      END=$(date +%s)
+      echo "${green}Mini Gapps Complete!!${reset}"; echo ""
+      echo "${green}Total time elapsed: $( echo $(( ${END}-${BEGIN} )) | awk '{print int($1/60)"mins "int($1%60)"secs "}' )${reset}"
+      echo "${green}Zip location: ${FINALDIR}/${ZIPNAMEMIN}${reset}"
+      echo "${green}Zip size: $( du -h ${FINALDIR}/${ZIPNAMEMIN} | awk '{print $1}' )${reset}"
+   else
+      echo "${red}GApps compilation failed!${reset}"
+   fi
+fi
