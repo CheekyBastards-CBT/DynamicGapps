@@ -10,7 +10,11 @@
 * Legacy support for swyping on AOSP LatinIME Keyboard
 
 **FULL:**
-* Coming Soon!!
+* Includes everything from MINI plus a few extras to get you going!!
+* Includes Google Messenger, Google Talkback, Google Hangouts*
+* Google Clock, Google Calendar, Google Photos, Google Camera
+
+*Hangouts is needed for Project Fi Wifi Calling
 
 **HOW TO USE:**
 * Get into the base of this repo
@@ -50,4 +54,6 @@
 * AlexLartsev19
 * Krash86
 * anestisb
+* nathanchance
+* surge1223
 * Others I may have missed

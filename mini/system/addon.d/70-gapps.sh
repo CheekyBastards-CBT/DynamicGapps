@@ -34,6 +34,7 @@ cat <<EOF
   app/GoogleVrCore/GoogleVrCore.apk
   app/GoogleTTS/GoogleTTS.apk
   etc/permissions/com.google.android.camera.experimental2015.xml
+  etc/permissions/com.google.android.camera.experimental2016.xml
   etc/permissions/com.google.android.dialer.support.xml
   etc/permissions/com.google.android.maps.xml
   etc/permissions/com.google.android.media.effects.xml
@@ -44,6 +45,7 @@ cat <<EOF
   etc/sysconfig/google_vr_build.xml
   etc/sysconfig/whitelist_com.android.omadm.service.xml
   framework/com.google.android.camera.experimental2015.jar
+  framework/com.google.android.camera.experimental2016.jar
   framework/com.google.android.dialer.support.jar
   framework/com.google.android.maps.jar
   framework/com.google.android.media.effects.jar

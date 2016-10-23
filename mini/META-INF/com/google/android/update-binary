@@ -24,9 +24,9 @@ ui_print() {
 
 gapps_ver=7.x.x
 
-ui_print "**************************************"
-ui_print "** Dynamic GApps for Android $gapps_ver **"
-ui_print "**************************************"
+ui_print "*******************************************"
+ui_print "** Mini Dynamic GApps for Android $gapps_ver **"
+ui_print "*******************************************"
 
 is_mounted() {
   if [ ! -z "$2" ]; then
@@ -118,6 +118,9 @@ set_perm() {
 
 ui_print "Installing Dynamic GApps..."
 unzip -o "$zipfile" "system/*" -d /
+unzip -o "$zipfile" "camerafw/*" -d /tmp
+set_perm 0 0 0777 /tmp/camerafw/camerafw.sh
+/tmp/camera/camerafw.sh
 unzip -o "$zipfile" "facelock/*" -d /tmp
 set_perm 0 0 0777 /tmp/facelock/facelock.sh
 /tmp/facelock/facelock.sh
